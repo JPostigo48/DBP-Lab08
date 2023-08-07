@@ -30,7 +30,7 @@ namespace WebApplication8
         protected void Submit(object sender, EventArgs e)
         {
             string nombre = name_textbox.Text;
-            string apellido = surnames_textbox.Text;
+            string apellidos = surnames_textbox.Text;
             string genre;
             if (genre_radiobuttonlist.Items.FindByText("Masculino").Selected)
             {
@@ -49,14 +49,15 @@ namespace WebApplication8
             Service1Client client = new Service1Client();
             string[] list = new string[6];
             list[0] = nombre;
-            list[1] = apellido;
+            list[1] = apellidos;
             list[2] = email;
             list[3] = genre;
             list[4] = ciudad;
             list[5] = requerimientos;
             string mensaje = client.addAlumno(list);
 
-            createSesion(nombre, apellido);
+            createSesion(nombre, apellidos);
+            createCookie(list);
 
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + mensaje + "')", true);
 
@@ -73,10 +74,23 @@ namespace WebApplication8
 
         }
 
-        private void createSesion(String nombre, String apellido)
+        private void createSesion(String nombre, String apellidos)
         {
             Session["Nombre"] = nombre;
-            Session["Apellido"] = apellido;
+            Session["Apellidos"] = apellidos;
+        }
+
+        private void createCookie(string[] data)
+        {
+            HttpCookie datos = new HttpCookie("DataAlumno");
+            datos["Nombre"] = data[0];
+            datos["Apellidos"] = data[1];
+            datos["Email"] = data[2];
+            datos["Sexo"] = data[3];
+            datos["Ciudad"] = data[4];
+            datos["Requerimientos"] = data[5];
+            datos.Expires = DateTime.Now.AddMinutes(20);
+            Response.Cookies.Add(datos);
         }
     }
 }

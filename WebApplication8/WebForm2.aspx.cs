@@ -11,7 +11,22 @@ namespace WebApplication8
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            loadSession();
+            deleteSession();
+        }
 
+        protected void loadSession()
+        {
+            String Nombre = (String)(Session["Nombre"]);
+            String Apellidos = (String)(Session["Apellidos"]);
+
+            LabelName.Text = "Nombre: " + Nombre;
+            LabelSurname.Text = "Apellidos: " + Apellidos;
+        }
+        protected void deleteSession()
+        {
+            Session.RemoveAll();
+            Session.Abandon();
         }
     }
 }
